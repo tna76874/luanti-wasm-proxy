@@ -38,9 +38,13 @@ export function sanitize(s) {
 // and thus may or may not be accurate.
 export function extract_ip_chain(request) {
     const chain = [];
-    for (let entry of request.headers['x-forwarded-for'].split(',')) {
-        chain.push(sanitize(entry.trim()));
+    // If x-forwarded-for header exists, parse it
+    if (request.headers['x-forwarded-for']) {
+        for (let entry of request.headers['x-forwarded-for'].split(',')) {
+            chain.push(sanitize(entry.trim()));
+        }
     }
+    // Always add the direct connection address
     chain.push(request.socket.remoteAddress);
     return chain;
 }
