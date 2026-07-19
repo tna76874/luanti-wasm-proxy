@@ -129,14 +129,16 @@ export class Client {
 
 }
 
-const PROXY_MAP = new Map(DIRECT_PROXY.map(([vip,ip,port]) => [vip, [ip, port]]));
+const PROXY_MAP = new Map(DIRECT_PROXY.map(([vip, ip, port]) => [`${vip}:${port}`, [ip, port]]));
 
 function route(client, isUDP, ip, port) {
     if (!isUDP && ip == '10.0.0.1' && port == 8080) {
         return new ConnectProxy(client);
     }
-    if (isUDP && PROXY_MAP.has(ip)) {
-        let [real_ip, real_port] = PROXY_MAP.get(ip);
+    
+    const key = `${ip}:${port}`;
+    if (isUDP && PROXY_MAP.has(key)) {
+        let [real_ip, real_port] = PROXY_MAP.get(key);
         return new UDPProxy(client, real_ip, real_port);
     }
 
