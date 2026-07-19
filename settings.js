@@ -1,5 +1,5 @@
 
-export const PROXY_PORT = 8888;
+export const PROXY_PORT = 8080;
 
 // [virtual_ip, real_ip, real_port]
 //
